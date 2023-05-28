@@ -1,15 +1,16 @@
+import throttle from "lodash.throttle";
 const formEl  = document.querySelector(".feedback-form");
 const inputEl  = document.querySelector("input");
 const messageEl = document.querySelector("textarea");
 const btnEl = document.querySelector("button");
 let feedback;
-formEl.addEventListener("input", () =>{
+formEl.addEventListener("input", throttle(() =>{
      feedback={
         email:inputEl.value,
         message:messageEl.value,
     }
     localStorage.setItem("feedback-form-state", JSON.stringify(feedback));
-});
+}), 500);
 let storageEl = JSON.parse(localStorage.getItem("feedback-form-state"));
 if(inputEl.value == "" && messageEl.value == "")
 {
