@@ -4,20 +4,23 @@ const inputEl  = document.querySelector("input");
 const messageEl = document.querySelector("textarea");
 const btnEl = document.querySelector("button");
 let feedback;
+let storageEl;
 formEl.addEventListener("input", throttle(() =>{
      feedback={
         email:inputEl.value,
         message:messageEl.value,
     }
     localStorage.setItem("feedback-form-state", JSON.stringify(feedback));
-}), 500);
-let storageEl = JSON.parse(localStorage.getItem("feedback-form-state"));
+    let localObj = localStorage.getItem("feedback-form-state")
+    storageEl = JSON.parse(localObj);
+}),500);
+
 if(inputEl.value == "" && messageEl.value == "")
 {
     if(storageEl){
-        inputEl.value =  storageEl.email;
-        messageEl.value = storageEl.message;
-    };
+    inputEl.value =  storageEl.email;
+    messageEl.value = storageEl.message;
+    }
 };
 btnEl.addEventListener("click", (event)=>{
 event.preventDefault();
