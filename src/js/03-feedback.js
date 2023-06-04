@@ -1,31 +1,30 @@
-import throttle from "lodash.throttle";
-const formEl  = document.querySelector(".feedback-form");
-const inputEl  = document.querySelector("input");
-const messageEl = document.querySelector("textarea");
-const btnEl = document.querySelector("button");
-let feedback;
-let storageEl;
-formEl.addEventListener("input", throttle(() =>{
-     feedback={
-        email:inputEl.value,
-        message:messageEl.value,
-    }
-    localStorage.setItem("feedback-form-state", JSON.stringify(feedback));
-    let localObj = localStorage.getItem("feedback-form-state")
-    storageEl = JSON.parse(localObj);
-}),500);
-
-if(inputEl.value == "" && messageEl.value == "")
-{
-    if(storageEl){
-    inputEl.value =  storageEl.email;
-    messageEl.value = storageEl.message;
-    }
+import _ from "lodash.throttle";
+const storage_key = "feedback-form-state";
+const formEl  = document.querySelector("form");
+const email  = formEl.elements.email;
+const message = formEl.elements.message;
+onPageLoading();
+formEl.addEventListener('input', _(onInputFn,500));
+formEl.addEventListener('submit', onSubmit);
+function onInputFn(){
+    const feedback={
+        email:email.value,
+        message:message.value,
+    };
+    localStorage.setItem(storage_key, JSON.stringify(feedback));
 };
-btnEl.addEventListener("click", (event)=>{
-event.preventDefault();
-console.log(storageEl);
-inputEl.value =  "";
-messageEl.value = "";
-localStorage.clear();
-});
+function onPageLoading(){
+    const storageEl = JSON.parse(localStorage.getItem(storage_key));
+    if(!storageEl) return;
+    email.value = storageEl.email;
+    message.value = storageEl.message;
+};
+function onSubmit(e){
+    e.preventDefault();
+    if(!email.value || !message.value){
+        return alert("All feels must be feel out!");
+    }
+    console.log({email: email.value, message: message.value });
+    formEl.reset();
+    localStorage.removeItem(storage_key);
+}
